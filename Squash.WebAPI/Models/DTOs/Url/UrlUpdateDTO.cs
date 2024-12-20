@@ -2,7 +2,8 @@
 {
     public class UrlUpdateDTO
     {
-        public string? OriginalUrl { get; set; }
-        public string? ShortUrl { get; set; }
+        public required int Id { get; set; }
+        public string? BaseUrl { get; set; }
+        public string? Alias { get; set; }
     }
 }

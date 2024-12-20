@@ -6,5 +6,9 @@ namespace Squash.WebAPI.Interfaces.Repositories
     /// <summary>
     /// Interface for the Url repository.
     /// </summary>
-    public interface IUrlRepository : IRepository<Url> { }
+    public interface IUrlRepository : IRepository<Url>
+    {
+        Task<bool> UrlAliasExistsAsync(string alias, int userId);
+        Task<Url> GetUrlByAliasAync(string alias, int userId);
+    }
 }

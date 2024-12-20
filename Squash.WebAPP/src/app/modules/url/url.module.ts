@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UrlDashboardComponent } from './url-dashboard/url-dashboard.component';
+import { UrlRoutingModule } from './url-routing.module';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
+  declarations: [UrlDashboardComponent],
+  imports: [CommonModule, UrlRoutingModule],
 })
-export class UrlModule { }
+export class UrlModule {}

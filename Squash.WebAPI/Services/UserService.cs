@@ -18,6 +18,7 @@ namespace Squash.WebAPI.Services
         }
         public async Task<bool> CreateAsync(User user)
         {
+            user.Guid = Guid.NewGuid();
             return await _repository.CreateAsync(user);
         }
         public async Task<bool> DeleteAsync(int id)

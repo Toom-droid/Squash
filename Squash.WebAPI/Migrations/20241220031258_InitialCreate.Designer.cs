@@ -12,7 +12,7 @@ using Squash.WebAPI.Data;
 namespace Squash.WebAPI.Migrations
 {
     [DbContext(typeof(SquashDBContext))]
-    [Migration("20241219215959_InitialCreate")]
+    [Migration("20241220031258_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,6 +33,10 @@ namespace Squash.WebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BaseUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,10 +46,6 @@ namespace Squash.WebAPI.Migrations
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ShortUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
