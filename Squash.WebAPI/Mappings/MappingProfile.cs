@@ -18,7 +18,7 @@ namespace Squash.WebAPI.Mappings
             CreateMap<Url, UrlReadDTO>();
             CreateMap<UrlCreateDTO, Url>();
             CreateMap<UrlUpdateDTO, Url>();
-
+      
         }
     }
 }

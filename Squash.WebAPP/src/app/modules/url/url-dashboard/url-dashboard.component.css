@@ -1,0 +1,22 @@
+.articles-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1rem; 
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  width: 100%; 
+  background-color: var(--dark-blue);
+  padding: 1.2rem;
+  box-shadow: inset 0px 0px 20px -1px #1d1d21;
+}
+
+article .url, time{
+  color: var(--very-light-blue);
+}
+
+article span{
+  color: var(--dark-light-blue);
+}

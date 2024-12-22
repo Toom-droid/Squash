@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Squash.WebAPI.Interfaces.Services;
 using Squash.WebAPI.Models.DTOs.Url;
 using Squash.WebAPI.Models;
+using Microsoft.SqlServer.Server;
+using Squash.WebAPI.Services;
+using Google.Apis.Auth;
 
 namespace Squash.WebAPI.Controllers
 {
@@ -36,6 +39,21 @@ namespace Squash.WebAPI.Controllers
                 var url = await _urlService.GetByIdAsync(id);
                 var urlDTO = _mapper.Map<UrlReadDTO>(url);
                 return Ok(urlDTO);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("userId/{userId}")]
+        public async Task<ActionResult<IEnumerable<UrlReadDTO>>> GetByUserIdAsync(int userId)
+        {
+            try
+            {
+                var urls = await _urlService.GetUrlsByUserIdAsync(userId);
+                var urlsDTO = _mapper.Map<IEnumerable<UrlReadDTO>>(urls);
+                return Ok(urlsDTO);
             }
             catch (Exception ex)
             {

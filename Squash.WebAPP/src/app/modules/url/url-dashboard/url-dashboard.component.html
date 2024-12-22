@@ -1,3 +1,40 @@
-<p>
-  url-dashboard works!
-</p>
+<section class="d-flex flex-column align-content-center gap-3 p-5 mx-5">
+  <div class="d-flex justify-content-between">
+    <div>
+      <h2 class="text-white">Dashboard /</h2>
+    </div>
+    <div>
+      <button class="btn">
+        <img src="/icons/link-icon.svg" class="icon" />New Link
+      </button>
+    </div>
+  </div>
+  <div class="articles-container d-grid gap-3">
+    <article class="text-white rounded-3" *ngFor="let url of urls">
+      <div class="d-flex justify-content-between gap-3">
+        <p class="fs-4"><span>/</span>{{ url.alias }}</p>
+        <div class="d-flex gap-2">
+          <img src="/icons/copy-icon.svg" class="icon mt-1" alt="Copy icon" />
+          <img
+            src="/icons/config-icon.svg"
+            class="icon mt-1"
+            alt="Config icon"
+          />
+          <img src="/icons/trash-icon.svg" class="icon mt-1" alt="Trash icon" />
+        </div>
+      </div>
+      <p class="url fs-5">{{ url.baseUrl }}</p>
+      <div class="d-flex justify-content-between align-items-center">
+        <p class="fs-4 m-0">
+          <img
+            src="/icons/click-icon.svg"
+            class="icon mb-1"
+            alt="click icon"
+          />
+          {{ url.visitCount }}
+        </p>
+        <time>{{ url.createdAt | date : "longDate" }}</time>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+<section class="d-flex flex-column align-items-center h-100 mt-5">
+  <div
+    class="d-flex flex-column justify-content-center auth-container p-4 rounded-3 "
+  >
+    <header>
+      <h2 class="text-white text-center card-title">Squash</h2>
+      <p class="text-center mt-2">Chose your favorite provider to get started:</p>
+    </header>
+    <div class="d-flex flex-column justify-content-center align-items-center mt-3">
+      <div *ngIf="!isLoggedIn" class="d-flex align-items-center justify-content-center flex-column gap-2 w-100">
+        
+        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="onLoginWithGoogle()">
+          <img src="icons/google-icon.svg" class="icon">
+          <p class="mb-0 login"> Continue with Google</p>
+         </div>
+        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="onLoginWithGoogle()">
+          <img src="icons/github-icon.svg" class="icon">
+          <p class="mb-0 login"> Continue with Github</p>
+         </div>
+      </div>
+
+      <div *ngIf="isLoggedIn" class="d-flex align-items-center justify-content-center flex-column gap-2 w-100">
+        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="logout()">
+          <img src="icons/logout-icon.svg" class="icon">
+          <p class="mb-0 logout">Logout</p>
+         </div>
+      </div>
+      
+    </div>
+  </div>
+</section>

@@ -15,6 +15,7 @@ namespace Squash.WebAPI.Repositories
 
         public async Task<bool> CreateAsync(User user)
         {
+            user.Guid = Guid.NewGuid();
             await _context.Users.AddAsync(user);
             return await _context.SaveChangesAsync() == 1;
         }
@@ -37,6 +38,11 @@ namespace Squash.WebAPI.Repositories
             {
                 return false;
             }
+        }
+
+        public async Task<User?> GetByAuthMethodIdAsync(string authMethodId)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.AuthMethodId == authMethodId);
         }
     }
 }

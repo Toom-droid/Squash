@@ -1,1 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+@import url(./app/assets/fonts/mona-sans-webfont/style.css);
+
+:root {
+  /* Neutral Colors */
+  --very-light-grey: #d6d6d6;
+  --light-grey: #c2c2c2;
+  --mid-grey: #5a5a5a;
+  --grey: #383838;
+  --dark-grey: #1d1d21;
+  --black: #101010;
+
+  /* Primary Color */
+  --very-light-blue: #f4f7fe;
+  --light-blue: #b1cbff;
+  --dark-light-blue: #5c7989;
+  --blue: #1463ff;
+  --dark-blue: #21476c;
+  --very-dark-blue: #0a3180;
+}
+
+body {
+  font-family: "Mona-Sans Medium", sans-serif !important;
+  background-color: var(--dark-grey) !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn{
+  background-color: var(--blue) !important; 
+  color: white !important;
+}
+
+.btn:hover{
+  background-color: var(--very-dark-blue) !important;
+}
+
+.logo {
+  height: 50px;
+  width: 50px;
+}
+
+.icon{
+  height: 25px;
+  width: 25px;
+}
+
+.right-arrow{
+  margin-bottom: 1px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

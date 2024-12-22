@@ -36,5 +36,6 @@ namespace Squash.WebAPI.Repositories
         }
         public async Task<bool> UrlAliasExistsAsync(string alias, int userId) => await _context.Urls.AnyAsync(u => u.Alias == alias && u.UserId == userId);
         public async Task<Url> GetUrlByAliasAync(string alias, int userId) => await _context.Urls.FirstOrDefaultAsync(u => u.Alias == alias && u.UserId == userId);
+        public async Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId) => await _context.Urls.Where(u => u.UserId == userId).ToListAsync();
     }
 }

@@ -4,7 +4,7 @@ export interface Url {
   id: number;
   guid: string;
   baseUrl: string;
-  shortUrl: string;
+  alias: string;
   userId: number;
   user: User;
   visitCount: number;

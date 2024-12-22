@@ -6,5 +6,8 @@ namespace Squash.WebAPI.Interfaces.Repositories
     /// <summary>
     /// Interface for the User repository.
     /// </summary>
-    public interface IUserRepository : IRepository<User> { }
+    public interface IUserRepository : IRepository<User> 
+    {
+        Task<User?> GetByAuthMethodIdAsync(string authMethodId);
+    }
 }

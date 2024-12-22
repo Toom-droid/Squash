@@ -1,0 +1,26 @@
+<section class="d-flex align-items-center justify-content-center home-section">
+  <div class="p-3 rounded-3 overflow-hidden main-card d-flex flex-column gap-5">
+    <h1 class="fw-bold text-center">
+      <span class="squash-span">Squash</span> your Links
+    </h1>
+    <p class="text-center">
+      Squash is a free, open-source platform designed for effortless creation,
+      management, and sharing of short links. It's intuitive, secure, and built
+      for speed.
+    </p>
+    
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <button
+        class="btn"
+        [routerLink]="isLoggedIn ? '/dashboard' : '/auth'"
+        routerLinkActive="active"
+      >
+        <img src="/icons/link-icon.svg" class="icon" />
+        Dashboard
+      </button>
+      <!-- <button class="btn" [routerLink]="isLoggedIn ? '/dashboard' : '/auth'" routerLinkActive="active">
+        <img src="/icons/qr-icon.svg" class="icon" /> Create a QR
+      </button> -->
+    </div>
+  </div>
+</section>

@@ -1,6 +1,7 @@
 ﻿using Squash.WebAPI.Interfaces.Repositories;
 using Squash.WebAPI.Interfaces.Services;
 using Squash.WebAPI.Models;
+using Squash.WebAPI.Repositories;
 
 namespace Squash.WebAPI.Services
 {
@@ -28,6 +29,24 @@ namespace Squash.WebAPI.Services
         public async Task<bool> UpdateAsync(User user)
         {
             return await _repository.UpdateAsync(user);
+        }
+
+        public async Task<User?> GetOrCreateUserAsync(User user)
+        {
+            var existingUser = await _repository.GetByAuthMethodIdAsync(user.AuthMethodId);
+
+            if (existingUser != null)
+            {
+                return existingUser;
+            }
+
+            var isCreated = await _repository.CreateAsync(user);
+            if (!isCreated)
+            {
+                return null;
+            }
+
+            return await _repository.GetByAuthMethodIdAsync(user.AuthMethodId);
         }
     }
 }

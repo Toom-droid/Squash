@@ -1,0 +1,17 @@
+.app-footer {
+  background-color: var(--black);
+  color: var(--very-light-grey);
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 0;
+}
+
+.app-footer ul {
+  margin: 0;
+}
+
+.app-footer a{
+  color: var(--very-light-grey);
+}

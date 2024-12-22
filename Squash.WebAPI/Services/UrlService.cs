@@ -37,5 +37,10 @@ namespace Squash.WebAPI.Services
             return await _repository.GetUrlByAliasAync(alias, userId);
         }
 
+        public async Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId)
+        {
+            return await _repository.GetUrlsByUserIdAsync(userId);
+        }
+
     }
 }

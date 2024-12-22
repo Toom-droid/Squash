@@ -1,0 +1,23 @@
+.main-card{
+  max-width: 55rem;
+  min-width: 25rem;
+}
+
+.main-card h1{
+  color: white;
+  font-size: 5rem;
+}
+
+.main-card p{
+  color: var(--very-light-grey);
+  font-size: 1.3rem;
+}
+
+.squash-span{
+  text-decoration: underline;
+  text-decoration-color: var(--blue);
+}
+
+.home-section{
+  margin-top: 5rem;
+}
