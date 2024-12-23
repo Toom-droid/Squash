@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Squash.WebAPI.Data;
 
@@ -11,9 +12,11 @@ using Squash.WebAPI.Data;
 namespace Squash.WebAPI.Migrations
 {
     [DbContext(typeof(SquashDBContext))]
-    partial class SquashDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241223153308_UrlUpdate")]
+    partial class UrlUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

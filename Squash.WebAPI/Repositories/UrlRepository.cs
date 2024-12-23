@@ -22,9 +22,11 @@ namespace Squash.WebAPI.Repositories
         {
             var response = await _context.Urls
             .Where(u => u.UserId == url.UserId && u.Id == url.Id)
-             .ExecuteUpdateAsync(properties => properties
-                 .SetProperty(u => u.BaseUrl, url.BaseUrl)
-                 .SetProperty(u => u.Alias, url.Alias));
+                .ExecuteUpdateAsync(properties => properties
+                    .SetProperty(u => u.BaseUrl, url.BaseUrl)
+                    .SetProperty(u => u.Alias, url.Alias)
+                    .SetProperty(u => u.Description, url.Description)
+                    .SetProperty(u => u.Flag, url.Flag));
             return response > 0;
         }
         public async Task<bool> DeleteAsync(int id)

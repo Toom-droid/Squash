@@ -13,7 +13,7 @@ declare var bootstrap: any;
 })
 export class UrlCreateComponent implements OnInit {
   createForm!: FormGroup;
-  url: Url = { baseUrl: '', alias: '', userId: 0 };
+  url: Url = { baseUrl: '', alias: '', description: '', flag: '', userId: 0 };
 
   constructor(
     private fb: FormBuilder,
@@ -25,6 +25,8 @@ export class UrlCreateComponent implements OnInit {
     this.createForm = this.fb.group({
       baseUrl: ['', [Validators.required, Validators.pattern('https?://.+')]],
       alias: ['', Validators.required],
+      description: [''],
+      flag: [''],
     });
 
     this.authService.getUserData().subscribe((data) => {
@@ -37,6 +39,9 @@ export class UrlCreateComponent implements OnInit {
       const formData = this.createForm.value;
       this.url.baseUrl = formData.baseUrl;
       this.url.alias = formData.alias;
+      this.url.description = formData.description;
+      this.url.flag = formData.flag
+
       this.urlService.create(this.url).subscribe((data) => {
         console.log(data);
       });

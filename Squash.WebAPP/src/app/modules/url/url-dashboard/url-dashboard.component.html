@@ -42,7 +42,7 @@
             alt="Config icon"
             data-bs-toggle="modal"
             data-bs-target="#updateModal"
-            (click)="openUpdateModal(url.id, url.baseUrl, url.alias)"
+            (click)="openUpdateModal(url.id, url.baseUrl, url.alias, url.description, url.flag)"
           />
           <app-url-delete
             [selectedAlias]="url.alias"
@@ -61,11 +61,15 @@
         </div>
       </div>
       <p class="url fs-5 text-truncate">{{ url.baseUrl }}</p>
+      <p class="fs-5">{{url.description}}</p>
       <div class="d-flex justify-content-between align-items-center">
-        <p class="fs-4 m-0">
-          <img src="/icons/click-icon.svg" class="icon mb-1" alt="click icon" />
-          {{ url.visitCount }}
-        </p>
+        <div class="d-flex align-items-center gap-3">
+          <p class="fs-4 m-0">
+            <img src="/icons/click-icon.svg" class="icon mb-1" alt="click icon" />
+            {{ url.visitCount }}
+          </p>
+          <p class="fs-5">{{url.flag}}</p>
+        </div>
         <time>{{ url.createdAt | date : "longDate" }}</time>
       </div>
     </article>

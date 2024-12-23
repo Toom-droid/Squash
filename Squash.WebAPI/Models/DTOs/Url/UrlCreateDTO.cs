@@ -7,5 +7,7 @@ namespace Squash.WebAPI.Models.DTOs.Url
         public required string BaseUrl { get; set; }
         public required string Alias { get; set; }
         public required int UserId { get; set; }
+        public required string Description { get; set; }
+        public required string Flag { get; set; }
     }
 }

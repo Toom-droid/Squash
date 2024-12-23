@@ -21,6 +21,8 @@ export class UrlDashboardComponent implements OnInit, OnDestroy {
 
   aliasToUpdate: string | null = null;
   urlIdToUpdate: number | null = null;
+  descToUpdate: string | null = null;
+  flagToUpdate: string | null = null;
   baseUrlToUpdate: string | null = null;
 
   private urlCreatedSubscription: Subscription | null = null;
@@ -90,10 +92,12 @@ export class UrlDashboardComponent implements OnInit, OnDestroy {
     this.urlIdToDelete = urlId;
   }
 
-  openUpdateModal(id: any, baseUrl: string, alias: string) {
+  openUpdateModal(id: any, baseUrl: string, alias: string, description: any, flag: any) {
     this.urlIdToUpdate = id;
     this.baseUrlToUpdate = baseUrl;
     this.aliasToUpdate = alias;
+    this.descToUpdate = description;
+    this.flagToUpdate = flag
   }
 
   deleteUrl(urlId: any): void {
