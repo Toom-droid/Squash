@@ -25,8 +25,7 @@ namespace Squash.WebAPI.Repositories
                 .ExecuteUpdateAsync(properties => properties
                     .SetProperty(u => u.BaseUrl, url.BaseUrl)
                     .SetProperty(u => u.Alias, url.Alias)
-                    .SetProperty(u => u.Description, url.Description)
-                    .SetProperty(u => u.Flag, url.Flag));
+                    .SetProperty(u => u.Description, url.Description));
             return response > 0;
         }
         public async Task<bool> DeleteAsync(int id)
@@ -42,7 +41,8 @@ namespace Squash.WebAPI.Repositories
                 return false;
             }
         }
-        public async Task<bool> UrlAliasExistsAsync(string alias, int userId) => await _context.Urls.AnyAsync(u => u.Alias == alias && u.UserId == userId);
+        public async Task<bool> UrlAliasExistsAsync(string alias) => await _context.Urls.AnyAsync(u => u.Alias == alias);
+        public async Task<bool> UrlAliasExistsByIdAsync(string alias, int urlId) => await _context.Urls.AnyAsync(u => u.Alias == alias && u.Id != urlId);
         public async Task<Url> GetUrlByAliasAync(string alias, int userId) => await _context.Urls.FirstOrDefaultAsync(u => u.Alias == alias && u.UserId == userId);
         public async Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId) => await _context.Urls.Where(u => u.UserId == userId).ToListAsync();
         public async Task<bool> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount)

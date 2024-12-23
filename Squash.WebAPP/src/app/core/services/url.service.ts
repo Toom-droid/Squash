@@ -18,6 +18,13 @@ export class UrlService extends BaseService<Url> {
     return this.http.get<Url>(`${this.urlApi}/${alias}/${userId}`);
   }
 
+  urlAliasExistsByIdAsync(alias: string, urlId: number): Observable<boolean>{
+    return this.http.get<boolean>(`${this.urlApi}/exist/${alias}/${urlId}`)
+  }
+  urlAliasExistsAsync(alias: string): Observable<boolean>{
+    return this.http.get<boolean>(`${this.urlApi}/exist/${alias}`)
+  }
+
   updateUrlVisitCountAsync(userId:number, urlId: number,  visitCount: number): Observable<boolean>{
     return this.http.put<boolean>(`${this.urlApi}/${userId}/${urlId}/${visitCount}`, {})
   }

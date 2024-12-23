@@ -64,6 +64,7 @@
               Alias is required.
             </div>
           </div>
+
           <div class="mb-3">
             <label for="alias" class="form-label">Description:</label>
             <input
@@ -71,24 +72,11 @@
               id="description"
               class="form-control modal-input"
               formControlName="description"
-              placeholder="my link"
+              placeholder="enter a description"
               autocomplete="off"
               [(ngModel)]="url.description"
             />
           </div>
-          <div class="mb-3">
-            <label for="alias" class="form-label">Flag:</label>
-            <input
-              type="text"
-              id="flag"
-              class="form-control modal-input"
-              formControlName="flag"
-              placeholder="my link"
-              autocomplete="off"
-              [(ngModel)]="url.flag"
-            />
-          </div>
-
           <div class="modal-footer border-0">
             <button
               type="button"
@@ -103,7 +91,9 @@
               [attr.data-bs-dismiss]="updateForm.valid ? 'modal' : null"
               [disabled]="
                 updateForm.invalid ||
-                (url.alias === alias && url.baseUrl === baseUrl && url.description === description && url.flag === flag)
+                (url.alias === alias &&
+                  url.baseUrl === baseUrl &&
+                  url.description === description)
               "
             >
               Save
