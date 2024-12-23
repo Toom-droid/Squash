@@ -42,5 +42,9 @@ namespace Squash.WebAPI.Services
             return await _repository.GetUrlsByUserIdAsync(userId);
         }
 
+        public async Task<bool> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount) 
+        {
+            return await _repository.UpdateUrlVisitCountAsync(userId, urlId, visitCount);
+        }
     }
 }

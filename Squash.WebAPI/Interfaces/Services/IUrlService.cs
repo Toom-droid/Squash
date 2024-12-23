@@ -11,5 +11,6 @@ namespace Squash.WebAPI.Interfaces.Services
         Task<bool> UrlAliasExistsAsync(string alias, int userId);
         Task<Url> GetUrlByAliasAync(string alias, int userId);
         Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId);
+        Task<bool> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount);
     }
 }

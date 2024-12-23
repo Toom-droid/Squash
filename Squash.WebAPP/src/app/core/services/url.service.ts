@@ -8,8 +8,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UrlService extends BaseService<Url> {
-  getByUserId(id: number): Observable<Url[]> {
-    return this.http.get<Url[]>(`http://localhost:5163/api/Url/userId/${id}`);
+  private urlApi = "http://localhost:5163/api/Url"
+
+  getUrlsByUserIdAsync(id: number): Observable<Url[]> {
+    return this.http.get<Url[]>(`${this.urlApi}/userId/${id}`);
+  }
+
+  getUrlByAliasAsync(alias: string, userId: number): Observable<Url>{
+    return this.http.get<Url>(`${this.urlApi}/${alias}/${userId}`);
+  }
+
+  updateUrlVisitCountAsync(userId:number, urlId: number,  visitCount: number): Observable<boolean>{
+    return this.http.put<boolean>(`${this.urlApi}/${userId}/${urlId}/${visitCount}`, {})
   }
 
   constructor(http: HttpClient) {

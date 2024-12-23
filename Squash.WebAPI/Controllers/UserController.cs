@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using JWT.Builder;
+using System.Net.Http.Headers;
+using Azure.Core;
 
 namespace Squash.WebAPI.Controllers
 {
@@ -90,6 +92,7 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
+        // Google Auth
         [HttpGet("auth/google")]
         public IActionResult RedirectToGoogle()
         {
@@ -212,7 +215,6 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-
         public class GoogleTokenResponse
         {
             [JsonProperty("access_token")]
@@ -272,7 +274,7 @@ namespace Squash.WebAPI.Controllers
 
                 if (jsonToken == null)
                 {
-                    return null; 
+                    return null;
                 }
 
                 var authMethodId = jsonToken?.Claims.FirstOrDefault(c => c.Type == "authMethodId")?.Value;
@@ -284,7 +286,7 @@ namespace Squash.WebAPI.Controllers
 
                 if (string.IsNullOrEmpty(authMethodId))
                 {
-                    return null; 
+                    return null;
                 }
 
                 return new UserCreateDTO
@@ -299,6 +301,133 @@ namespace Squash.WebAPI.Controllers
             {
                 return null;
             }
+        }
+
+        // Github Auth
+        [HttpGet("auth/github")]
+        public IActionResult RedirectToGitHub()
+        {
+            var clientId = _configuration["GitHub:ClientId"];
+            var redirectUri = Uri.EscapeDataString(_configuration["GitHub:RedirectUri"]);
+            var state = Guid.NewGuid().ToString();
+
+            var url = $"https://github.com/login/oauth/authorize?client_id={clientId}&redirect_uri={redirectUri}&scope=user:email&state={state}";
+
+            Response.Cookies.Append("OAuthState", state);
+
+            return Redirect(url);
+        }
+
+        [HttpGet("auth/github-callback")]
+        public async Task<IActionResult> GitHubCallback([FromQuery] string code, [FromQuery] string state)
+        {
+            var savedState = Request.Cookies["OAuthState"];
+            if (state != savedState)
+            {
+                return BadRequest("Estado inválido.");
+            }
+
+            var tokenUrl = "https://github.com/login/oauth/access_token";
+            var clientId = _configuration["GitHub:ClientId"];
+            var clientSecret = _configuration["GitHub:ClientSecret"];
+            var redirectUri = _configuration["GitHub:RedirectUri"];
+
+            var tokenRequest = new Dictionary<string, string>
+        {
+            { "code", code },
+            { "client_id", clientId },
+            { "client_secret", clientSecret },
+            { "redirect_uri", redirectUri }
+        };
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            var tokenResponse = await httpClient.PostAsync(tokenUrl, new FormUrlEncodedContent(tokenRequest));
+
+            if (!tokenResponse.IsSuccessStatusCode)
+            {
+                var errorContent = await tokenResponse.Content.ReadAsStringAsync();
+                return BadRequest($"Error al obtener el token: {errorContent}");
+            }
+
+            var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
+            var tokenResult = JsonConvert.DeserializeObject<GitHubTokenResponse>(tokenContent);
+
+            // Obtener la información del usuario
+            var userInfoUrl = "https://api.github.com/user";
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenResult.AccessToken);
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("App", "1.0"));
+
+            var userInfoResponse = await httpClient.GetAsync(userInfoUrl);
+            if (!userInfoResponse.IsSuccessStatusCode)
+            {
+                var errorContent = await userInfoResponse.Content.ReadAsStringAsync();
+                return BadRequest($"Error al obtener la información del usuario: {errorContent}");
+            }
+
+            var userInfoContent = await userInfoResponse.Content.ReadAsStringAsync();
+            var userInfo = JsonConvert.DeserializeObject<GitHubUserInfo>(userInfoContent);
+            var emails = await GetGithubUserEmailsAsync(tokenResult.AccessToken);
+            var primaryEmail = emails?.FirstOrDefault(e => e.Primary && e.Verified)?.Email;
+
+
+            // Crear o recuperar usuario
+            var userData = new UserCreateDTO
+            {
+                Email = primaryEmail,
+                Name = userInfo.Name ?? userInfo.Login,
+                AuthMethod = "github",
+                AuthMethodId = userInfo.Id.ToString()
+            };
+
+            var user = _mapper.Map<User>(userData);
+            var userCreated = await _userService.GetOrCreateUserAsync(user);
+
+            // Generar token JWT
+            var token = GenerateJwtToken(userCreated);
+
+            return Redirect($"https://localhost:4200/auth/callback?token={token}");
+        }
+
+        public class GitHubTokenResponse
+        {
+            [JsonProperty("access_token")]
+            public string AccessToken { get; set; }
+
+            [JsonProperty("token_type")]
+            public string TokenType { get; set; }
+        }
+
+        private static async Task<List<GithubEmail>> GetGithubUserEmailsAsync(string accessToken)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Add("User-Agent", "Squash");
+            var response = await client.GetAsync("https://api.github.com/user/emails");
+            if (!response.IsSuccessStatusCode) return null;
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<GithubEmail>>(content);
+        }
+        public class GitHubUserInfo
+        {
+            [JsonProperty("id")]
+            public int Id { get; set; }
+
+            [JsonProperty("login")]
+            public string Login { get; set; }
+
+            [JsonProperty("email")]
+            public string Email { get; set; }
+
+            [JsonProperty("name")]
+            public string Name { get; set; }
+        }
+        public class GithubEmail
+        {
+            public string Email { get; set; }
+            public bool Primary { get; set; }
+            public bool Verified { get; set; }
         }
     }
 }

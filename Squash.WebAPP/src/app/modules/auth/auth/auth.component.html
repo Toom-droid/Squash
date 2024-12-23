@@ -9,11 +9,11 @@
     <div class="d-flex flex-column justify-content-center align-items-center mt-3">
       <div *ngIf="!isLoggedIn" class="d-flex align-items-center justify-content-center flex-column gap-2 w-100">
         
-        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="onLoginWithGoogle()">
+        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="LoginWithGoogle()">
           <img src="icons/google-icon.svg" class="icon">
           <p class="mb-0 login"> Continue with Google</p>
          </div>
-        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="onLoginWithGoogle()">
+        <div class="btn d-flex justify-content-center gap-2 w-100" (click)="LoginWithGithub()">
           <img src="icons/github-icon.svg" class="icon">
           <p class="mb-0 login"> Continue with Github</p>
          </div>

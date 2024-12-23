@@ -10,16 +10,20 @@ import { AuthService } from '../../../core/services/auth.service';
 export class AuthComponent implements OnInit {
   isLoggedIn = false;
   userName: string | null = null;
+  userData: any = null;
 
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  onLoginWithGoogle(): void {
+  LoginWithGoogle(): void {
     this.authService.loginWithGoogle();
   }
-  userData: any = null;
+
+  LoginWithGithub(): void{
+    this.authService.loginWithGithub();
+  }
 
   ngOnInit(): void {
     this.authService.loggedIn$.subscribe((status) => {

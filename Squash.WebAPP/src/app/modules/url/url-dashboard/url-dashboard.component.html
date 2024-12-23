@@ -4,33 +4,66 @@
       <h2 class="text-white">Dashboard /</h2>
     </div>
     <div>
-      <button class="btn">
+      <button
+        class="btn"
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#createModal"
+      >
         <img src="/icons/link-icon.svg" class="icon" />New Link
       </button>
+      <app-url-create></app-url-create>
     </div>
   </div>
-  <div class="articles-container d-grid gap-3">
-    <article class="text-white rounded-3" *ngFor="let url of urls">
+  <!-- Ajustamos aquí el grid de acuerdo al tamaño de pantalla -->
+  <div class="articles-container row g-3">
+    <article
+      class="col-12 col-sm-6 col-md-4 text-white rounded-3"
+      *ngFor="let url of urls"
+    >
       <div class="d-flex justify-content-between gap-3">
-        <p class="fs-4"><span>/</span>{{ url.alias }}</p>
+        <p class="fs-4 cursor-pointer" routerLink="/{{url.alias}}" ><span>/</span>{{ url.alias }}</p>
         <div class="d-flex gap-2">
-          <img src="/icons/copy-icon.svg" class="icon mt-1" alt="Copy icon" />
+          <img
+            src="/icons/copy-icon.svg"
+            (click)="copyToClipboard(url.alias)"
+            class="icon mt-1 cursor-pointer"
+            alt="Copy icon"
+          />
+          <app-url-update
+            [id]="url.id"
+            [baseUrl]="url.baseUrl"
+            [alias]="url.alias"
+          ></app-url-update>
           <img
             src="/icons/config-icon.svg"
-            class="icon mt-1"
+            class="icon cursor-pointer mt-1"
             alt="Config icon"
+            data-bs-toggle="modal"
+            data-bs-target="#updateModal"
+            (click)="openUpdateModal(url.id, url.baseUrl, url.alias)"
           />
-          <img src="/icons/trash-icon.svg" class="icon mt-1" alt="Trash icon" />
+          <app-url-delete
+            [selectedAlias]="url.alias"
+            [urlIdToDelete]="url?.id ?? null"
+            (confirmDelete)="deleteUrl(url.id)"
+          >
+          </app-url-delete>
+          <img
+            src="/icons/trash-icon.svg"
+            class="icon cursor-pointer mt-1"
+            alt="icon"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmDeleteModal"
+            (click)="openDeleteModal(url.alias, url.id)"
+          />
         </div>
       </div>
-      <p class="url fs-5">{{ url.baseUrl }}</p>
+      <p class="url fs-5 text-truncate">{{ url.baseUrl }}</p>
       <div class="d-flex justify-content-between align-items-center">
         <p class="fs-4 m-0">
-          <img
-            src="/icons/click-icon.svg"
-            class="icon mb-1"
-            alt="click icon"
-          />
+          <img src="/icons/click-icon.svg" class="icon mb-1" alt="click icon" />
           {{ url.visitCount }}
         </p>
         <time>{{ url.createdAt | date : "longDate" }}</time>

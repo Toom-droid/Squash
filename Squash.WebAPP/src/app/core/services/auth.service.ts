@@ -18,8 +18,9 @@ export class AuthService {
     return !!localStorage.getItem('authToken');
   }
 
+  // Google Auth
   loginWithGoogle(): void {
-    window.location.href = 'http://localhost:5163/api/User/auth/google';
+    window.location.href = `${this.apiUrl}/auth/google`;
   }
 
   handleGoogleCallback(): void {
@@ -30,14 +31,31 @@ export class AuthService {
       this.loggedInSubject.next(true); 
       this.router.navigate(['/dashboard']);
     } else {
-      console.error('No se recibió el token');
+      console.error('Token not Provided');
     }
   }
+
+  // Github Auth
+  loginWithGithub(): void {
+    window.location.href = `${this.apiUrl}/auth/github`;
+  }
+
+  handleGithubCallback(): void {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+      localStorage.setItem('authToken', token);
+      this.router.navigate(['/dashboard']);
+    } else {
+      console.error('Token not Provided');
+    }
+  }
+
 
   getUserData(): Observable<any> {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      throw new Error('Token no encontrado');
+      throw new Error('Token doesnt Founded');
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

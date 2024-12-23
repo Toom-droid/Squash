@@ -46,6 +46,20 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
+        [HttpGet("{alias}/{userId}")]
+        public async Task<ActionResult<UrlReadDTO>> GetUrlByAliasAync(string alias, int userId) {
+            try 
+            {
+                var url = await _urlService.GetUrlByAliasAync(alias, userId);
+                var urlDTO = _mapper.Map<UrlReadDTO>(url);
+                return Ok(urlDTO);
+            } 
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpGet("userId/{userId}")]
         public async Task<ActionResult<IEnumerable<UrlReadDTO>>> GetByUserIdAsync(int userId)
         {
@@ -84,6 +98,20 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
+        [HttpPut("{userId}/{urlId}/{visitCount}")]
+        public async Task<IActionResult> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount)
+        {
+            try
+            {
+                if (!await _urlService.UpdateUrlVisitCountAsync(userId, urlId, visitCount)) return NotFound();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
@@ -97,5 +125,6 @@ namespace Squash.WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
     }
 }
