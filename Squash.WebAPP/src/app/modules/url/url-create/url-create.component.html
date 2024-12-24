@@ -1,17 +1,16 @@
+<!-- Modal -->
 <div
   class="modal fade"
-  id="updateModal"
+  id="createModal"
   tabindex="-1"
-  aria-labelledby="updateModalLabel"
+  aria-labelledby="createModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-0">
         <div class="d-flex justify-content-between align-items-center w-100">
-          <h4 class="modal-title" id="confirmDeleteModalLabel">
-            Update link <strong><span>/</span>{{ alias }}</strong>
-          </h4>
+          <h4 class="modal-title" id="confirmDeleteModalLabel">New Link</h4>
           <img
             src="icons/close-icon.svg"
             class="icon cursor-pointer"
@@ -20,7 +19,7 @@
         </div>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="onSubmit()" [formGroup]="updateForm">
+        <form (ngSubmit)="onSubmit()" [formGroup]="createForm">
           <div class="mb-3">
             <label for="baseUrl" class="form-label">URL:</label>
             <input
@@ -29,17 +28,25 @@
               class="form-control modal-input"
               formControlName="baseUrl"
               placeholder="https://"
-              [(ngModel)]="url.baseUrl"
               autocomplete="off"
             />
             <div
               *ngIf="
-                updateForm.get('baseUrl')?.invalid &&
-                updateForm.get('baseUrl')?.touched
+                createForm.get('baseUrl')?.hasError('required') &&
+                createForm.get('baseUrl')?.touched
               "
               class="text-danger mt-1"
             >
               Url is required
+            </div>
+            <div
+              *ngIf="
+                createForm.get('baseUrl')?.hasError('maxlength') &&
+                createForm.get('baseUrl')?.touched
+              "
+              class="text-danger mt-1"
+            >
+              Url must be 250 characters or less.
             </div>
           </div>
 
@@ -52,30 +59,47 @@
               formControlName="alias"
               placeholder="my link"
               autocomplete="off"
-              [(ngModel)]="url.alias"
             />
             <div
               *ngIf="
-                updateForm.get('alias')?.invalid &&
-                updateForm.get('alias')?.touched
+                createForm.get('alias')?.hasError('required') &&
+                createForm.get('alias')?.touched
               "
               class="text-danger mt-1"
             >
               Alias is required.
             </div>
+            <div
+              *ngIf="
+                createForm.get('alias')?.hasError('minlength') &&
+                createForm.get('alias')?.touched
+              "
+              class="text-danger mt-1"
+            >
+              Alias must be 3 characters or more.
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="alias" class="form-label">Description:</label>
-            <input
-              type="text"
+            <textarea
+              type="textbox"
               id="description"
               class="form-control modal-input"
               formControlName="description"
               placeholder="enter a description"
               autocomplete="off"
               [(ngModel)]="url.description"
-            />
+            ></textarea>
+          </div>
+          <div
+            *ngIf="
+              createForm.get('description')?.hasError('maxlength') &&
+              createForm.get('description')?.touched
+            "
+            class="text-danger mt-1"
+          >
+            Description must be 100 characters or less.
           </div>
           <div class="modal-footer border-0">
             <button
@@ -83,20 +107,14 @@
               class="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              Close
+              Cerrar
             </button>
             <button
               type="submit"
               class="btn btn-primary"
-              [attr.data-bs-dismiss]="updateForm.valid ? 'modal' : null"
-              [disabled]="
-                updateForm.invalid ||
-                (url.alias === alias &&
-                  url.baseUrl === baseUrl &&
-                  url.description === description)
-              "
+              [disabled]="createForm.invalid"
             >
-              Save
+              Guardar
             </button>
           </div>
         </form>

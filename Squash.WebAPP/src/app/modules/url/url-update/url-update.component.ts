@@ -17,12 +17,10 @@ export class UrlUpdateComponent implements OnInit {
   @Input() baseUrl: any | null = null;
   @Input() alias: any | null = null;
   @Input() description: any | null = null;
-  @Input() flag: any | null = null;
   url: Url = {
     baseUrl: '',
     alias: '',
     description: '',
-    flag: '',
     id: 0,
     userId: 0,
   };
@@ -38,14 +36,12 @@ export class UrlUpdateComponent implements OnInit {
       baseUrl: ['', [Validators.required, Validators.pattern('https?://.+')]],
       alias: ['', Validators.required],
       description: [''],
-      flag: [''],
     });
 
     this.url.alias = this.alias;
     this.url.baseUrl = this.baseUrl;
     this.url.id = this.id;
     this.url.description = this.description;
-    this.url.flag = this.flag;
 
     this.authService.getUserData().subscribe((d) => {
       this.url.userId = d.id;
@@ -58,7 +54,6 @@ export class UrlUpdateComponent implements OnInit {
       this.url.baseUrl = formData.baseUrl;
       this.url.alias = formData.alias;
       this.url.description = formData.description;
-      this.url.flag = formData.flag;
 
       this.urlService.update(this.url).subscribe();
     }

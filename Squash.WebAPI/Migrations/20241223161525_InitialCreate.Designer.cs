@@ -12,8 +12,8 @@ using Squash.WebAPI.Data;
 namespace Squash.WebAPI.Migrations
 {
     [DbContext(typeof(SquashDBContext))]
-    [Migration("20241223153308_UrlUpdate")]
-    partial class UrlUpdate
+    [Migration("20241223161525_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,10 +45,6 @@ namespace Squash.WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Flag")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

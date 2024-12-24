@@ -45,10 +45,6 @@ namespace Squash.WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Flag")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
