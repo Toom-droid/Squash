@@ -44,18 +44,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontendOrigin", policy =>
-    {
-        policy.WithOrigins("https://localhost:4200", "https://squash-yzbg9q.fly.dev")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
-
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -75,6 +63,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
+
 
 // Configure Kestrel for use HTTPS
 builder.WebHost.ConfigureKestrel(options =>
