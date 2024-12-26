@@ -1,3 +1,8 @@
+# fly.toml app configuration file generated for squash-yzbg9q on 2024-12-26T23:11:54Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
 app = 'squash-yzbg9q'
 primary_region = 'eze'
 
@@ -16,31 +21,3 @@ primary_region = 'eze'
   cpu_kind = 'shared'
   cpus = 1
   memory_mb = 1024
-
-[env]
-	PORT = "8080"
-	ConnectionString = "Host=dpg-ctl29n5umphs73d6ou2g-a.oregon-postgres.render.com;Port=5432;Username=squashdb_user;Password=D3747s8fcdFRqpvzgu2he5Z9Gp4aEkwf;Database=squashdb;SSL Mode=Require;Trust Server Certificate=True"
-
-	JWT_KEY = "K*k[&]1,1YT{?5v5tcM9#+NZX{eXEE2<S^M0tRy1a+_,^U<,m,"
-	JWT_ISSUER = "Squash"
-	JWT_AUDIENCE = "Squash.WebAPP"
-
-	GITHUB_CLIENT_ID = "Ov23li65kP5m7Fz8GLEg"
-	GITHUB_CLIENT_SECRET = "9768a6107d97e4f0e5f72125b86d3010c180d8dc"
-	GITHUB_REDIRECT_URI = "http://localhost:5163/api/user/auth/github-callback"
-	GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
-	GITHUB_USER_INFO_URL = "https://api.github.com/user"
-	GITHUB_EMAIL_URL = "https://api.github.com/user/emails"
-
-	GOOGLE_CLIENT_ID = "164650067185-7p2v78at0bl9stg6qa43jdla67egnr4h.apps.googleusercontent.com"
-	GOOGLE_CLIENT_SECRET = "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"
-	GOOGLE_REDIRECT_URI = "http://localhost:5163/api/user/auth/google-callback"
-	GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-	GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
-	GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
-
-	FRONTEND_URL = "http://localhost:4200"
-
-[experimental]
-	auto_rollback = true
-
