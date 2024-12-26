@@ -15,7 +15,7 @@ RUN dotnet restore "Squash.WebAPI.csproj"
 
 # Copiar el resto de los archivos y construir el proyecto
 COPY Squash.WebAPI/ /src/Squash.WebAPI/
-WORKDIR "/src/"
+WORKDIR "/src"
 RUN dotnet build "Squash.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publicar el proyecto
