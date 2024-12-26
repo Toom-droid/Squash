@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Entity Framework Core with SQL Server
 builder.Services.AddDbContext<SquashDBContext>(options =>
-    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionString")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Register Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
