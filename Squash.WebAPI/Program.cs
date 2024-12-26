@@ -10,8 +10,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var frontUrl = builder.Configuration["Frontend:Url"];
-
 // Configure Entity Framework Core with SQL Server
 builder.Services.AddDbContext<SquashDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
@@ -42,7 +40,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("https://localhost:4200")
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials(); 
+              .AllowCredentials();
     });
 });
 
@@ -67,31 +65,18 @@ builder.Services.AddAuthentication(options =>
 // Configure Kestrel for use HTTPS
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ConfigureHttpsDefaults(configureOptions =>
-    {
-        configureOptions.SslProtocols = System.Security.Authentication.SslProtocols.Tls13;
-    });
+    options.ListenAnyIP(8080); // Listen on port 8080 for HTTP
+    options.ListenAnyIP(8081, listenOptions => listenOptions.UseHttps()); // Listen on port 8081 for HTTPS
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
-}
-
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-
-app.UseCors(builder =>
-    builder.WithOrigins("https://localhost:4200")
-           .AllowCredentials()
-           .AllowAnyHeader()
-           .AllowAnyMethod());
+app.UseCors("AllowFrontendOrigin");
 
 app.Use(async (context, next) =>
 {
@@ -100,6 +85,7 @@ app.Use(async (context, next) =>
     await next();
 });
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
