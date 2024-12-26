@@ -65,12 +65,8 @@ builder.Services.AddAuthentication(options =>
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 
-// Configure Kestrel for use HTTPS
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8080); // Listen on port 8080 for HTTP
-    options.ListenAnyIP(8081, listenOptions => listenOptions.UseHttps()); // Listen on port 8081 for HTTPS
-});
+builder.WebHost.UseUrls($"http://0.0.0.0:8080");
+
 
 var app = builder.Build();
 
