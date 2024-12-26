@@ -81,8 +81,8 @@
           "options": {
             "port": 4200,
             "ssl": true,
-            "sslKey": "C:\\Users\\Tomas\\source\\repos\\Squash\\Squash.WebAPP\\ssl\\localhost-key.pem",
-            "sslCert": "C:\\Users\\Tomas\\source\\repos\\Squash\\Squash.WebAPP\\ssl\\localhost.pem"
+            "sslKey": "C:\\Tomas\\Repos\\Squash\\Squash.WebAPP\\ssl\\localhost-key.pem",
+            "sslCert": "C:\\Tomas\\Repos\\Squash\\Squash.WebAPP\\ssl\\localhost.pem"
           }
         },
         "extract-i18n": {
@@ -106,5 +106,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
