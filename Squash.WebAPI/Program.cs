@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure Entity Framework Core with SQL Server
 builder.Services.AddDbContext<SquashDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionString")));
 
 // Register Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -43,6 +43,18 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontendOrigin", policy =>
+    {
+        policy.WithOrigins("https://localhost:4200", "https://squash-yzbg9q.fly.dev")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 
 builder.Services.AddAuthentication(options =>
 {
