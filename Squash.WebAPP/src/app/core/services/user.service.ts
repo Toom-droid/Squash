@@ -8,6 +8,6 @@ import { User } from '../../models/user.model';
 })
 export class UserService extends BaseService<User> {
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:5163/api/User');
+    super(http, 'https://squash-7b6x.onrender.com/api/User');
   }
 }

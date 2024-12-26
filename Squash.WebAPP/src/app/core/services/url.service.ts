@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UrlService extends BaseService<Url> {
-  private urlApi = "http://localhost:5163/api/Url"
+  private urlApi = "https://squash-7b6x.onrender.com/api/Url"
 
   getUrlsByUserIdAsync(id: number): Observable<Url[]> {
     return this.http.get<Url[]>(`${this.urlApi}/userId/${id}`);
@@ -30,6 +30,6 @@ export class UrlService extends BaseService<Url> {
   }
 
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:5163/api/Url');
+    super(http, 'https://squash-7b6x.onrender.com/api/Url');
   }
 }

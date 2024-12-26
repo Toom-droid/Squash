@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5163/api/user';
+  private apiUrl = 'https://squash-7b6x.onrender.com/api/user';
 
   private loggedInSubject = new BehaviorSubject<boolean>(this.checkLoginStatus());
   loggedIn$ = this.loggedInSubject.asObservable();
