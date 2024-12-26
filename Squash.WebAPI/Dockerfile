@@ -10,12 +10,12 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copiar el archivo de proyecto y restaurar dependencias
-COPY ["backend/Squash.WebAPI/Squash.WebAPI.csproj", "backend/Squash.WebAPI/"]
-RUN dotnet restore "backend/Squash.WebAPI/Squash.WebAPI.csproj"
+COPY ["Squash.WebAPI/Squash.WebAPI.csproj", "Squash.WebAPI/"]
+RUN dotnet restore "Squash.WebAPI/Squash.WebAPI.csproj"
 
 # Copiar el resto de los archivos y construir el proyecto
-COPY backend/Squash.WebAPI/ /src/backend/Squash.WebAPI/
-WORKDIR "/src/backend/Squash.WebAPI"
+COPY Squash.WebAPI/ /src/Squash.WebAPI/
+WORKDIR "/src/Squash.WebAPI"
 RUN dotnet build "Squash.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publicar el proyecto
