@@ -10,11 +10,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//var frontUrl = builder.Configuration["Frontend:Url"];
 
 // Configure Entity Framework Core with SQL Server
 builder.Services.AddDbContext<SquashDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Register Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
