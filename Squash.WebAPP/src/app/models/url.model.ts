@@ -5,6 +5,7 @@ export interface Url {
   guid?: string;
   baseUrl: string;
   alias: string;
+  description?: string;
   userId?: number;
   user?: User;
   visitCount?: number;

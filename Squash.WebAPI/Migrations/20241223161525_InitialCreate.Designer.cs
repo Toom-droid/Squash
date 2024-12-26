@@ -12,7 +12,7 @@ using Squash.WebAPI.Data;
 namespace Squash.WebAPI.Migrations
 {
     [DbContext(typeof(SquashDBContext))]
-    [Migration("20241220031258_InitialCreate")]
+    [Migration("20241223161525_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -43,6 +43,10 @@ namespace Squash.WebAPI.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");

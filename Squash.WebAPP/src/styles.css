@@ -1,5 +1,5 @@
 @import url(./app/assets/fonts/mona-sans-webfont/style.css);
-@import '../node_modules/ngx-toastr/toastr.css';
+@import "../node_modules/ngx-toastr/toastr.css";
 
 :root {
   /* Neutral Colors */
@@ -32,19 +32,18 @@ body {
 
 .btn {
   background-color: var(--blue) !important;
-  color: var(--very-light-blue)!important;
+  color: var(--very-light-blue) !important;
   border: none !important;
   outline: none !important;
   border: none !important;
 }
 
-.btn:focus{
+.btn:focus {
   outline: none !important;
   border: none !important;
   border-color: transparent !important;
   box-shadow: none !important;
 }
-
 
 .btn:hover {
   background-color: var(--very-dark-blue) !important;
@@ -68,16 +67,16 @@ body {
   cursor: pointer;
 }
 
-.modal-container{
+.modal-container {
   background-color: var(--dark-grey) !important;
 }
 
-.modal-input{
+.modal-input {
   background-color: var(--grey) !important;
   color: white !important;
-  padding: .5rem !important;
-  border: .4px solid transparent !important;
-  transition: all .2s ease;
+  padding: 0.5rem !important;
+  border: 0.4px solid transparent !important;
+  transition: all 0.2s ease;
 }
 
 .modal-content {
@@ -86,31 +85,36 @@ body {
   color: white !important;
 }
 
-.modal-input:focus{
+.modal-input:focus {
   background-color: var(--grey) !important;
-  border: .4px solid white !important;
+  border: 0.4px solid white !important;
   box-shadow: none !important;
 }
 
-.modal-input::placeholder{
+.modal-input::placeholder {
   color: var(--very-light-grey) !important;
-  opacity: .3 !important;
+  opacity: 0.3 !important;
 }
 
-.modal-header{
+.modal-header {
   background-color: var(--black) !important;
 }
 
-.modal-header h4 span{
+.modal-header h4 span {
   color: var(--very-light-grey);
 }
 
 .toast-success {
   background-color: var(--dark-grey) !important;
-  color: var(--light-grey) !important;      
+  color: var(--light-grey) !important;
   box-shadow: none !important;
-  border: .5px solid white !important;
-  transform: scale(.9);
-  padding: .7rem 1.5rem .7rem 1.5rem;
-  width: 15rem;
+  border: 0.5px solid white !important;
+  transform: scale(0.9);
+  padding: 0.7rem 1.5rem 0.7rem 1.5rem;
+  border-radius: 0.5rem;
+  width: 25rem;
+}
+
+textarea {
+  resize: none !important;
 }

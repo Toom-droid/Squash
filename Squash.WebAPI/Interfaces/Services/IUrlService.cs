@@ -8,7 +8,8 @@ namespace Squash.WebAPI.Interfaces.Services
     /// </summary>
     public interface IUrlService : IService<Url>
     {
-        Task<bool> UrlAliasExistsAsync(string alias, int userId);
+        Task<bool> UrlAliasExistsAsync(string alias);
+        Task<bool> UrlAliasExistsByIdAsync(string alias, int urlId);
         Task<Url> GetUrlByAliasAync(string alias, int userId);
         Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId);
         Task<bool> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount);

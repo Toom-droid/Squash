@@ -1,5 +1,8 @@
-﻿namespace Squash.WebAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Squash.WebAPI.Models
 {
+    [Table("Users")]
     public class User
     {
         public required int Id { get; set; }
@@ -8,6 +11,6 @@
         public required string Name { get; set; }
         public required string AuthMethod { get; set; }
         public required string AuthMethodId { get; set; }
-        public required DateTime CreatedAt { get; set; } = DateTime.Now;
+        public required DateTime CreatedAt { get; set; } = DateTime.Now.ToUniversalTime();
     }
 }

@@ -25,7 +25,8 @@ import { ToastrModule } from 'ngx-toastr';
       progressBar: true,
       preventDuplicates: true,
       iconClasses: {
-        success: '', // Elimina el icono de éxito globalmente
+        success: '',
+        error: '',
       },
     }),
   ],

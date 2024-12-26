@@ -16,22 +16,36 @@ export class UrlUpdateComponent implements OnInit {
   @Input() id: any | null = null;
   @Input() baseUrl: any | null = null;
   @Input() alias: any | null = null;
-  url: Url = { baseUrl: '', alias: '', id: 0, userId: 0 };
+  @Input() description: any | null = null;
+  url: Url = {
+    baseUrl: '',
+    alias: '',
+    description: '',
+    id: 0,
+    userId: 0,
+  };
 
-  constructor(private urlService: UrlService, private authService: AuthService ,private fb: FormBuilder) {}
+  constructor(
+    private urlService: UrlService,
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit() {
     this.updateForm = this.fb.group({
       baseUrl: ['', [Validators.required, Validators.pattern('https?://.+')]],
       alias: ['', Validators.required],
+      description: [''],
     });
 
     this.url.alias = this.alias;
     this.url.baseUrl = this.baseUrl;
     this.url.id = this.id;
+    this.url.description = this.description;
+
     this.authService.getUserData().subscribe((d) => {
-      this.url.userId = d.id
-    })
+      this.url.userId = d.id;
+    });
   }
 
   onSubmit(): void {
@@ -39,10 +53,9 @@ export class UrlUpdateComponent implements OnInit {
       const formData = this.updateForm.value;
       this.url.baseUrl = formData.baseUrl;
       this.url.alias = formData.alias;
+      this.url.description = formData.description;
 
-      this.urlService.update(this.url).subscribe((data) => {
-        console.log(data);
-      });
+      this.urlService.update(this.url).subscribe();
     }
   }
 

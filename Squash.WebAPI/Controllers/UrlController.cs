@@ -75,10 +75,23 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
+        [HttpGet("exist/{alias}/{urlId}")]
+        public async Task<ActionResult<bool>> UrlAliasExistsByIdAsync(string alias, int urlId)
+        {
+                return await _urlService.UrlAliasExistsByIdAsync(alias, urlId);
+        }
+
+        [HttpGet("exist/{alias}")]
+        public async Task<ActionResult<bool>> UrlAliasExistsAsync(string alias)
+        {
+                return await _urlService.UrlAliasExistsAsync(alias);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] UrlCreateDTO urlDto)
         {
             var url = _mapper.Map<Url>(urlDto);
+            if (await _urlService.UrlAliasExistsAsync(url.Alias)) return StatusCode(409, $"Url with alias:'{url.Alias}' already exists.");
             if (!await _urlService.CreateAsync(url)) return NotFound();
             return NoContent();
         }
@@ -89,6 +102,7 @@ namespace Squash.WebAPI.Controllers
             try
             {
                 var url = _mapper.Map<Url>(urlDto);
+                if (await _urlService.UrlAliasExistsByIdAsync(url.Alias, url.Id)) return StatusCode(409, $"Url with alias:'{url.Alias}' already exists.");
                 if (!await _urlService.UpdateAsync(url)) return NotFound();
                 return NoContent();
             }

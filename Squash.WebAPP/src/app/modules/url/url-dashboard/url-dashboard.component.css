@@ -16,6 +16,12 @@
   }
 }
 
+.description{
+  height: 1rem;
+  font-size: 1rem;
+  color: var(--very-light-grey);
+}
+
 article {
   display: flex;
   flex-direction: column;

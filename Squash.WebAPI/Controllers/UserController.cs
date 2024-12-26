@@ -96,9 +96,9 @@ namespace Squash.WebAPI.Controllers
         [HttpGet("auth/google")]
         public IActionResult RedirectToGoogle()
         {
-            var googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
-            var clientId = "164650067185-7p2v78at0bl9stg6qa43jdla67egnr4h.apps.googleusercontent.com";
-            var redirectUri = Uri.EscapeDataString("http://localhost:5163/api/user/auth/google-callback");
+            var googleAuthUrl = _configuration["Google:AuthUrl"];
+            var clientId = _configuration["Google:ClientId"];
+            var redirectUri = Uri.EscapeDataString(_configuration["Google:RedirectUri"]);
             var scope = "openid email profile";
             var state = Guid.NewGuid().ToString();
 
@@ -119,10 +119,10 @@ namespace Squash.WebAPI.Controllers
                 return BadRequest("Estado inválido.");
             }
 
-            var tokenUrl = "https://oauth2.googleapis.com/token";
-            var clientId = "164650067185-7p2v78at0bl9stg6qa43jdla67egnr4h.apps.googleusercontent.com";
-            var clientSecret = "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";
-            var redirectUri = "http://localhost:5163/api/user/auth/google-callback";
+            var tokenUrl = _configuration["Google:TokenUrl"];
+            var clientId = _configuration["Google:ClientId"];
+            var clientSecret = _configuration["Google:ClientSecret"];
+            var redirectUri = _configuration["Google:RedirectUri"];
 
             var tokenRequest = new Dictionary<string, string>
             {
@@ -148,8 +148,8 @@ namespace Squash.WebAPI.Controllers
 
             var tokenResponse = JsonConvert.DeserializeObject<GoogleTokenResponse>(responseContent);
 
-            var userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+            var userInfoUrl = _configuration["Google:UserInfoUrl"];
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
             var userInfoResponse = await httpClient.GetAsync(userInfoUrl);
             var userInfoContent = await userInfoResponse.Content.ReadAsStringAsync();
 
@@ -174,7 +174,8 @@ namespace Squash.WebAPI.Controllers
 
             var token = GenerateJwtToken(userCreated);
 
-            return Redirect($"https://localhost:4200/auth/callback?token={token}");
+            var frontendUrl = _configuration["Frontend:Url"];
+            return Redirect($"{frontendUrl}/auth/callback?token={token}");
         }
 
         [HttpGet("jwt")]
@@ -327,7 +328,7 @@ namespace Squash.WebAPI.Controllers
                 return BadRequest("Estado inválido.");
             }
 
-            var tokenUrl = "https://github.com/login/oauth/access_token";
+            var tokenUrl = _configuration["GitHub:TokenUrl"];
             var clientId = _configuration["GitHub:ClientId"];
             var clientSecret = _configuration["GitHub:ClientSecret"];
             var redirectUri = _configuration["GitHub:RedirectUri"];
@@ -341,7 +342,7 @@ namespace Squash.WebAPI.Controllers
         };
 
             using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var tokenResponse = await httpClient.PostAsync(tokenUrl, new FormUrlEncodedContent(tokenRequest));
 
             if (!tokenResponse.IsSuccessStatusCode)
@@ -354,9 +355,9 @@ namespace Squash.WebAPI.Controllers
             var tokenResult = JsonConvert.DeserializeObject<GitHubTokenResponse>(tokenContent);
 
             // Obtener la información del usuario
-            var userInfoUrl = "https://api.github.com/user";
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenResult.AccessToken);
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("App", "1.0"));
+            var userInfoUrl = _configuration["GitHub:UserInfoURL"];
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.AccessToken);
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("App", "1.0"));
 
             var userInfoResponse = await httpClient.GetAsync(userInfoUrl);
             if (!userInfoResponse.IsSuccessStatusCode)
@@ -386,7 +387,8 @@ namespace Squash.WebAPI.Controllers
             // Generar token JWT
             var token = GenerateJwtToken(userCreated);
 
-            return Redirect($"https://localhost:4200/auth/callback?token={token}");
+            var frontendUrl = _configuration["Frontend:Url"];
+            return Redirect($"{frontendUrl}/auth/callback?token={token}");
         }
 
         public class GitHubTokenResponse
@@ -398,12 +400,13 @@ namespace Squash.WebAPI.Controllers
             public string TokenType { get; set; }
         }
 
-        private static async Task<List<GithubEmail>> GetGithubUserEmailsAsync(string accessToken)
+        private async Task<List<GithubEmail>> GetGithubUserEmailsAsync(string accessToken)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             client.DefaultRequestHeaders.Add("User-Agent", "Squash");
-            var response = await client.GetAsync("https://api.github.com/user/emails");
+            var githubEmailUrl = _configuration["Github:EmailUrl"];
+            var response = await client.GetAsync(githubEmailUrl);
             if (!response.IsSuccessStatusCode) return null;
 
             var content = await response.Content.ReadAsStringAsync();

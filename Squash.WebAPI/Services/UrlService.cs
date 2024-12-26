@@ -28,9 +28,13 @@ namespace Squash.WebAPI.Services
         {
             return await _repository.UpdateAsync(url);
         }
-        public async Task<bool> UrlAliasExistsAsync(string alias, int userId)
+        public async Task<bool> UrlAliasExistsAsync(string alias)
         {
-            return await _repository.UrlAliasExistsAsync(alias, userId);
+            return await _repository.UrlAliasExistsAsync(alias);
+        }
+        public async Task<bool> UrlAliasExistsByIdAsync(string alias, int urlId)
+        {
+            return await _repository.UrlAliasExistsByIdAsync(alias, urlId);
         }
         public async Task<Url> GetUrlByAliasAync(string alias, int userId)
         {
