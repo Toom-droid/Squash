@@ -98,6 +98,11 @@ body {
 
 .modal-header {
   background-color: var(--black) !important;
+  border: none !important;
+}
+
+.modal-footer{
+  border: none !important;
 }
 
 .modal-header h4 span {

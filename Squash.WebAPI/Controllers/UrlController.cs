@@ -16,20 +16,6 @@ namespace Squash.WebAPI.Controllers
         private readonly IUrlService _urlService = UrlService;
         private readonly IMapper _mapper = mapper;
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UrlReadDTO>>> GetAllAsync()
-        {
-            try
-            {
-                var urls = await _urlService.GetAllAsync();
-                var urlsDTO = _mapper.Map<IEnumerable<UrlReadDTO>>(urls);
-                return Ok(urlsDTO);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UrlReadDTO>> GetByIdAsync(int id)
@@ -46,11 +32,11 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{alias}/{userId}")]
-        public async Task<ActionResult<UrlReadDTO>> GetUrlByAliasAync(string alias, int userId) {
+        [HttpGet("{alias}")]
+        public async Task<ActionResult<UrlReadDTO>> GetUrlByAliasAync(string alias) {
             try 
             {
-                var url = await _urlService.GetUrlByAliasAync(alias, userId);
+                var url = await _urlService.GetUrlByAliasAync(alias);
                 var urlDTO = _mapper.Map<UrlReadDTO>(url);
                 return Ok(urlDTO);
             } 
@@ -112,12 +98,12 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-        [HttpPut("{userId}/{urlId}/{visitCount}")]
-        public async Task<IActionResult> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount)
+        [HttpPut("{urlId}/{visitCount}")]
+        public async Task<IActionResult> UpdateUrlVisitCountAsync(int urlId, int visitCount)
         {
             try
             {
-                if (!await _urlService.UpdateUrlVisitCountAsync(userId, urlId, visitCount)) return NotFound();
+                if (!await _urlService.UpdateUrlVisitCountAsync(urlId, visitCount)) return NotFound();
                 return NoContent();
             }
             catch (Exception ex)

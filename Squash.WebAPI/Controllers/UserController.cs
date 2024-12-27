@@ -24,20 +24,6 @@ namespace Squash.WebAPI.Controllers
         private readonly IMapper _mapper = mapper;
         private readonly IConfiguration _configuration = configuration;
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllAsync()
-        {
-            try
-            {
-                var users = await _userService.GetAllAsync();
-                var usersDTO = _mapper.Map<IEnumerable<UserReadDTO>>(users);
-                return Ok(usersDTO);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserReadDTO>> GetByIdAsync(int id)

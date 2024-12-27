@@ -1,121 +1,234 @@
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importamos NgbModal
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Url } from '../../../models/url.model';
-import { UrlService } from './../../../core/services/url.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { UrlService } from '../../../core/services/url.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-url-dashboard',
-  standalone: false,
   templateUrl: './url-dashboard.component.html',
   styleUrls: ['./url-dashboard.component.css'],
+  standalone: false,
 })
 export class UrlDashboardComponent implements OnInit, OnDestroy {
-  isLoggedIn: boolean = false;
-  urls: Url[] = [];
+  isLoggedIn$!: Observable<boolean>;
+  urls$!: Observable<Url[]>;
+  loading: boolean = true;
+  private destroy$ = new Subject<void>();
+  aliasDeleteInput: string = '';
 
-  aliasToDelete: string = '';
-  urlIdToDelete: number | null = null;
+  @ViewChild('deleteModal') deleteModal: any;
+  @ViewChild('updateModal') updateModal: any;
 
-  aliasToUpdate: string | null = null;
-  urlIdToUpdate: number | null = null;
-  descToUpdate: string | null = null;
-  baseUrlToUpdate: string | null = null;
+  modalData: {
+    aliasToDelete?: string;
+    urlIdToDelete?: number;
+    aliasToUpdate?: string;
+    urlIdToUpdate?: number;
+    baseUrlToUpdate?: string;
+    descToUpdate?: string;
+    aliasToCreate?: string;
+    baseUrlToCreate?: string;
+    descToCreate?: string;
+  } = {};
 
-  private urlCreatedSubscription: Subscription | null = null;
-  private urlDeletedSubscription: Subscription | null = null;
-  private urlUpdatedSubscription: Subscription | null = null;
+  aliasUpdateInput: string = '';
+  baseUrlUpdateInput: string = '';
 
   constructor(
-    private urlService: UrlService,
     private authService: AuthService,
+    private urlService: UrlService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal
   ) {}
 
-  ngOnInit(): void {
-    this.loadUrls();
-
-    this.urlCreatedSubscription = this.urlService.$createdSubject.subscribe(
-      (created) => {
-        if (created) this.loadUrls();
-      }
-    );
-
-    this.urlDeletedSubscription = this.urlService.$deletedSubject.subscribe(
-      (deleted) => {
-        if (deleted) this.loadUrls();
-      }
-    );
-
-    this.urlUpdatedSubscription = this.urlService.$updatedSubject.subscribe(
-      (updated) => {
-        if (updated) this.loadUrls();
-      }
-    );
+  closeModal(): void {
+    this.modalService.dismissAll();
   }
 
-  loadUrls(): void {
-    this.authService.loggedIn$.subscribe((status) => {
-      this.isLoggedIn = status;
-      if (!this.isLoggedIn) {
+  ngOnInit(): void {
+    this.authService.loadUserData();
+
+    this.isLoggedIn$ = this.authService.loggedIn$;
+    this.isLoggedIn$.pipe(takeUntil(this.destroy$)).subscribe((isLoggedIn) => {
+      if (!isLoggedIn) {
         this.router.navigate(['/']);
-      } else {
-        this.authService.getUserData().subscribe((d) => {
-          this.urlService.getUrlsByUserIdAsync(d.id).subscribe((d) => {
-            this.urls = d.map((u) => {
-              return u;
-            });
-          });
-        });
       }
     });
+
+    this.urls$ = this.urlService.urls$;
+
+    this.authService
+      .getUserId()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userId) => {
+        if (userId) {
+          this.urlService.loadUrlsByUserId(userId).subscribe(
+            (urls) => {
+              this.loading = false;
+            },
+            (error) => {
+              console.error('Error al cargar las URLs:', error);
+              this.loading = false;
+            }
+          );
+        } else {
+          console.error('User ID is null or undefined');
+        }
+      });
+
+    this.urlService.$createdSubject
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.refreshUrls();
+      });
+
+    this.urlService.$deletedSubject
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.refreshUrls();
+      });
+
+    this.urlService.$updatedSubject
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.refreshUrls();
+      });
   }
 
-  ngOnDestroy(): void {
-    if (this.urlCreatedSubscription) {
-      this.urlCreatedSubscription.unsubscribe();
-    }
-    if (this.urlDeletedSubscription) {
-      this.urlDeletedSubscription.unsubscribe();
-    }
-    if (this.urlUpdatedSubscription) {
-      this.urlUpdatedSubscription.unsubscribe();
-    }
+  refreshUrls(): void {
+    this.authService
+      .getUserId()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userId) => {
+        if (userId) {
+          this.urlService.loadUrlsByUserId(userId).subscribe(
+            (urls) => {
+              this.loading = false;
+            },
+            (error) => {
+              console.error('Error al cargar las URLs:', error);
+              this.loading = false;
+            }
+          );
+        }
+      });
   }
 
-  openDeleteModal(alias: string, urlId: any): void {
-    this.aliasToDelete = alias;
-    this.urlIdToDelete = urlId;
+  openDeleteModal(content: any, alias: string, urlId: any): void {
+    this.aliasDeleteInput = '';
+    this.modalData = { aliasToDelete: alias, urlIdToDelete: urlId };
+    this.modalService.open(content);
   }
 
-  openUpdateModal(id: any, baseUrl: string, alias: string, description: any) {
-    this.urlIdToUpdate = id;
-    this.baseUrlToUpdate = baseUrl;
-    this.aliasToUpdate = alias;
-    this.descToUpdate = description;
+  openUpdateModal(
+    content: any,
+    id: any,
+    baseUrl: string,
+    alias: string,
+    description: any
+  ): void {
+    this.modalData = {
+      urlIdToUpdate: id,
+      baseUrlToUpdate: baseUrl,
+      aliasToUpdate: alias,
+      descToUpdate: description,
+    };
+    this.aliasUpdateInput = this.modalData.aliasToUpdate;
+    this.baseUrlUpdateInput = this.modalData.baseUrlToUpdate;
+    this.modalService.open(content);
+  }
+
+  openCreateModal(content: any): void {
+    this.modalService.open(content);
   }
 
   deleteUrl(urlId: any): void {
-    this.urlService.delete(urlId).subscribe((d) => {
-      return d;
-    });
-    this.aliasToDelete = '';
-    this.urlIdToDelete = null;
+    if (
+      urlId !== undefined &&
+      this.modalData.aliasToDelete == this.aliasDeleteInput
+    ) {
+      this.urlService.deleteUrl(urlId).subscribe(() => {
+        this.toastr.success('URL deleted succesfully');
+        this.closeModal();
+        this.modalData = {};
+      });
+    }
+  }
+
+  updateUrl(id: any, alias: string, baseUrl: string, desc: string): void {
+    this.authService
+      .getUserId()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userId) => {
+        const updatedUrl = {
+          id: id,
+          alias: alias,
+          baseUrl: baseUrl,
+          description: desc,
+          userId: userId,
+        };
+
+        this.urlService.updateUrl(updatedUrl).subscribe({
+          next: () => {
+            this.toastr.success('URL updated succesfully');
+            this.closeModal();
+            this.modalData = {};
+          },
+          error: (err) => {
+            this.toastr.error('Error updating URL');
+            console.error(err);
+          },
+        });
+      });
+  }
+
+  createUrl(alias: string, baseUrl: string, desc: string) {
+    this.authService
+      .getUserId()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userId) => {
+        const createdUrl = {
+          alias: alias,
+          baseUrl: baseUrl,
+          description: desc ? desc : '',
+          userId: userId,
+        };
+
+        console.log(createdUrl);
+
+        this.urlService.createUrl(createdUrl).subscribe({
+          next: () => {
+            this.toastr.success('URL created succesfully');
+            this.closeModal();
+            this.modalData = {};
+          },
+          error: (err) => {
+            this.toastr.error('Error creating URL');
+            console.error(err);
+          },
+        });
+      });
+  }
+
+  trackById(index: number, url: any): number {
+    return url.id;
   }
 
   copyToClipboard(alias: string): void {
     navigator.clipboard
-      .writeText('https://localhost:4200/' + alias)
-      .then(() => {
-        this.toastr.success('/' + alias, 'Copied to clipboard', {
-          toastClass: 'toast-success',
-        });
-      })
-      .catch((err) => {
-        console.error('Error: ', err);
-      });
+      .writeText(`https://localhost:4200/${alias}`)
+      .then(() => this.toastr.success(`/${alias}`, 'Copiado al portapapeles'))
+      .catch((err) => console.error('Error al copiar al portapapeles:', err));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

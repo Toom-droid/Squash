@@ -4,7 +4,8 @@
   >
     <header>
       <h2 class="text-white text-center card-title">Squash</h2>
-      <p class="text-center mt-2">Chose your favorite provider to get started:</p>
+      <p class="text-center mt-2" *ngIf="!isLoggedIn">Chose your favorite provider to get started:</p>
+      <p class="text-center mt-2" *ngIf="isLoggedIn">You can login again whenever you want.</p>
     </header>
     <div class="d-flex flex-column justify-content-center align-items-center mt-3">
       <div *ngIf="!isLoggedIn" class="d-flex align-items-center justify-content-center flex-column gap-2 w-100">

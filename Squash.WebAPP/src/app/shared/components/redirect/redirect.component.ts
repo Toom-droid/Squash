@@ -34,13 +34,13 @@ export class RedirectComponent implements OnInit {
       }
       
       const url = await firstValueFrom(
-        this.urlService.getUrlByAliasAsync(alias, userId)
+        this.urlService.getUrlByAlias(alias)
       );
       let visitCount = url.visitCount ? url.visitCount + 1 : null;
 
 
       if (visitCount && url.id) {
-        this.urlService.updateUrlVisitCountAsync(userId, url.id, visitCount).subscribe();
+        this.urlService.updateUrlVisitCount(url.id, visitCount).subscribe();
       }
 
       if (!url) throw new Error('Alias not found');

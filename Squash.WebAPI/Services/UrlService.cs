@@ -7,10 +7,6 @@ namespace Squash.WebAPI.Services
     public class UrlService(IUrlRepository repository) : IUrlService
     {
         private readonly IUrlRepository _repository = repository;
-        public async Task<IEnumerable<Url>> GetAllAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
         public async Task<Url> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
@@ -36,9 +32,9 @@ namespace Squash.WebAPI.Services
         {
             return await _repository.UrlAliasExistsByIdAsync(alias, urlId);
         }
-        public async Task<Url> GetUrlByAliasAync(string alias, int userId)
+        public async Task<Url> GetUrlByAliasAync(string alias)
         {
-            return await _repository.GetUrlByAliasAync(alias, userId);
+            return await _repository.GetUrlByAliasAync(alias);
         }
 
         public async Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId)
@@ -46,9 +42,9 @@ namespace Squash.WebAPI.Services
             return await _repository.GetUrlsByUserIdAsync(userId);
         }
 
-        public async Task<bool> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount) 
+        public async Task<bool> UpdateUrlVisitCountAsync(int urlId, int visitCount) 
         {
-            return await _repository.UpdateUrlVisitCountAsync(userId, urlId, visitCount);
+            return await _repository.UpdateUrlVisitCountAsync( urlId, visitCount);
         }
     }
 }

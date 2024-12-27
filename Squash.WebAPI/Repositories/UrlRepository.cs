@@ -43,12 +43,12 @@ namespace Squash.WebAPI.Repositories
         }
         public async Task<bool> UrlAliasExistsAsync(string alias) => await _context.Urls.AnyAsync(u => u.Alias == alias);
         public async Task<bool> UrlAliasExistsByIdAsync(string alias, int urlId) => await _context.Urls.AnyAsync(u => u.Alias == alias && u.Id != urlId);
-        public async Task<Url> GetUrlByAliasAync(string alias, int userId) => await _context.Urls.FirstOrDefaultAsync(u => u.Alias == alias && u.UserId == userId);
+        public async Task<Url> GetUrlByAliasAync(string alias) => await _context.Urls.FirstOrDefaultAsync(u => u.Alias == alias);
         public async Task<IEnumerable<Url>> GetUrlsByUserIdAsync(int userId) => await _context.Urls.Where(u => u.UserId == userId).ToListAsync();
-        public async Task<bool> UpdateUrlVisitCountAsync(int userId, int urlId, int visitCount)
+        public async Task<bool> UpdateUrlVisitCountAsync(int urlId, int visitCount)
         {   
             var response = await _context.Urls
-                .Where(u => u.UserId == userId && u.Id == urlId)
+                .Where(u => u.Id == urlId)
              .ExecuteUpdateAsync(properties => properties
                  .SetProperty(u => u.VisitCount, visitCount));
             return response > 0;

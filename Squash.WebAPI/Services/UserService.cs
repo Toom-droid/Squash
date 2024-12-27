@@ -9,10 +9,6 @@ namespace Squash.WebAPI.Services
     {
         private readonly IUserRepository _repository = repository;
 
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
         public async Task<User> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);

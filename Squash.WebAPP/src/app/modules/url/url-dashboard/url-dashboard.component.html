@@ -5,25 +5,28 @@
     </div>
     <div>
       <button
-        class="btn"
-        type="button"
         class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#createModal"
+        type="button"
+        (click)="openCreateModal(createModal)"
       >
         <img src="/icons/link-icon.svg" class="icon" />New Link
       </button>
-      <app-url-create></app-url-create>
     </div>
   </div>
-  <!-- Ajustamos aquí el grid de acuerdo al tamaño de pantalla -->
-  <div class="articles-container row g-3">
+
+  <div *ngIf="loading" class="d-flex justify-content-center align-items-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="articles-container row g-3" *ngIf="!loading">
     <article
       class="col-12 col-sm-6 col-md-4 text-white rounded-3"
-      *ngFor="let url of urls"
+      *ngFor="let url of urls$ | async; trackBy: trackById"
     >
       <div class="d-flex justify-content-between gap-3">
-        <p class="fs-4 cursor-pointer" routerLink="/{{ url.alias }}">
+        <p class="fs-4 cursor-pointer" [routerLink]="['/', url.alias]">
           <span>/</span>{{ url.alias }}
         </p>
         <div class="d-flex gap-2">
@@ -33,19 +36,13 @@
             class="icon mt-1 cursor-pointer"
             alt="Copy icon"
           />
-          <app-url-update
-            [id]="url.id"
-            [baseUrl]="url.baseUrl"
-            [alias]="url.alias"
-          ></app-url-update>
           <img
             src="/icons/config-icon.svg"
             class="icon cursor-pointer mt-1"
             alt="Config icon"
-            data-bs-toggle="modal"
-            data-bs-target="#updateModal"
             (click)="
               openUpdateModal(
+                updateModal,
                 url.id,
                 url.baseUrl,
                 url.alias,
@@ -53,19 +50,11 @@
               )
             "
           />
-          <app-url-delete
-            [selectedAlias]="url.alias"
-            [urlIdToDelete]="url?.id ?? null"
-            (confirmDelete)="deleteUrl(url.id)"
-          >
-          </app-url-delete>
           <img
             src="/icons/trash-icon.svg"
             class="icon cursor-pointer mt-1"
-            alt="icon"
-            data-bs-toggle="modal"
-            data-bs-target="#confirmDeleteModal"
-            (click)="openDeleteModal(url.alias, url.id)"
+            alt="Trash icon"
+            (click)="openDeleteModal(deleteModal, url.alias, url.id)"
           />
         </div>
       </div>
@@ -80,4 +69,246 @@
       </div>
     </article>
   </div>
+
+  <ng-template #updateModal let-modal>
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title">Update URL</h4>
+      <img
+        src="icons/close-icon.svg"
+        class="icon cursor-pointer"
+        (click)="modal.close()"
+      />
+    </div>
+    <div class="modal-body">
+      <form #updateForm="ngForm">
+        <div class="mt-2">
+          <label for="baseUrl" class="my-2">Base URL</label>
+          <input
+            [(ngModel)]="modalData.baseUrlToUpdate"
+            name="baseUpdateUrl"
+            #baseUpdateUrl="ngModel"
+            type="text"
+            id="baseUrl"
+            class="form-control modal-input"
+            required
+            pattern="https://.*"
+          />
+          <div
+            *ngIf="baseUpdateUrl.invalid && baseUpdateUrl.touched"
+            class="text-danger"
+          >
+            <small *ngIf="baseUpdateUrl.errors?.['required']"
+              >Base URL is required.</small
+            >
+            <small *ngIf="baseUpdateUrl.errors?.['pattern']"
+              >Base URL must start with https://</small
+            >
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <label for="alias" class="my-2">Alias</label>
+          <input
+            [(ngModel)]="modalData.aliasToUpdate"
+            name="aliasUpdate"
+            #aliasUpdate="ngModel"
+            type="text"
+            id="alias"
+            class="form-control modal-input"
+            required
+            minlength="3"
+          />
+          <div
+            *ngIf="aliasUpdate.invalid && aliasUpdate.touched"
+            class="text-danger"
+          >
+            <small *ngIf="aliasUpdate.errors?.['required']"
+              >Alias is required.</small
+            >
+            <small *ngIf="aliasUpdate.errors?.['minlength']"
+              >Alias must be at least 3 characters long.</small
+            >
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <label for="description" class="my-2">Description</label>
+          <input
+            [(ngModel)]="modalData.descToUpdate"
+            type="text"
+            id="description"
+            class="form-control modal-input"
+          />
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">
+        Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="
+          (modalData.aliasToUpdate == aliasUpdateInput &&
+            modalData.baseUrlToUpdate == baseUrlUpdateInput) ||
+          updateForm.invalid
+        "
+        (click)="
+          updateUrl(
+            modalData.urlIdToUpdate,
+            modalData.aliasToUpdate,
+            modalData.baseUrlToUpdate,
+            modalData.descToUpdate
+          )
+        "
+      >
+        Save
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #deleteModal let-modal>
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title">Delete URL</h4>
+      <img
+        src="icons/close-icon.svg"
+        class="icon cursor-pointer"
+        (click)="modal.close()"
+      />
+    </div>
+    <div class="modal-body">
+      <p class="confirm-p">
+        Please enter the alias "<strong>{{ modalData?.aliasToDelete }}</strong
+        >" to confirm deletion:
+      </p>
+      <p class="advice">
+        Access to the link will be
+        <strong class="text-danger">removed</strong> please do this with
+        caution.
+      </p>
+      <input
+        type="text"
+        class="form-control modal-input"
+        [(ngModel)]="aliasDeleteInput"
+        placeholder="{{ modalData.aliasToDelete }}"
+        autocomplete="off"
+      />
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close();">
+        Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="aliasDeleteInput !== modalData?.aliasToDelete"
+        (click)="deleteUrl(modalData?.urlIdToDelete)"
+      >
+        Delete
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #createModal let-modal>
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title">Create URL</h4>
+      <img
+        src="icons/close-icon.svg"
+        class="icon cursor-pointer"
+        (click)="modal.close()"
+      />
+    </div>
+    <div class="modal-body">
+      <form #createForm="ngForm">
+        <div class="mt-2">
+          <label for="baseUrl" class="my-2">Base URL</label>
+          <input
+            [(ngModel)]="modalData.baseUrlToCreate"
+            name="baseCreateUrl"
+            placeholder="https://"
+            #baseCreateUrl="ngModel"
+            type="text"
+            id="baseUrl"
+            class="form-control modal-input"
+            required
+            pattern="https://.*"
+          />
+          <div
+            *ngIf="baseCreateUrl.invalid && baseCreateUrl.touched"
+            class="text-danger"
+          >
+            <small *ngIf="baseCreateUrl.errors?.['required']"
+              >Base URL is required.</small
+            >
+            <small *ngIf="baseCreateUrl.errors?.['pattern']"
+              >Base URL must start with https://</small
+            >
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <label for="alias" class="my-2">Alias</label>
+          <input
+            [(ngModel)]="modalData.aliasToCreate"
+            name="aliasUpdate"
+            #aliasCreate="ngModel"
+            type="text"
+            placeholder="my link"
+            id="alias"
+            class="form-control modal-input"
+            required
+            minlength="3"
+          />
+          <div
+            *ngIf="aliasCreate.invalid && aliasCreate.touched"
+            class="text-danger"
+          >
+            <small *ngIf="aliasCreate.errors?.['required']"
+              >Alias is required.</small
+            >
+            <small *ngIf="aliasCreate.errors?.['minlength']"
+              >Alias must be at least 3 characters long.</small
+            >
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <label for="description" class="my-2">Description</label>
+          <input
+            [(ngModel)]="modalData.descToCreate"
+            name="description"
+            type="text"
+            placeholder="enter a description"
+            id="description"
+            class="form-control modal-input"
+          />
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">
+        Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="
+          modalData.aliasToCreate == undefined ||
+          modalData.baseUrlToCreate == undefined ||
+          createForm.invalid
+        "
+        (click)="
+          createUrl(
+            modalData.aliasToCreate,
+            modalData.baseUrlToCreate,
+            modalData.descToCreate
+          )
+        "
+      >
+        Save
+      </button>
+    </div>
+  </ng-template>
 </section>
