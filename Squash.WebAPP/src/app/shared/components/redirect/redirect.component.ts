@@ -25,14 +25,7 @@ export class RedirectComponent implements OnInit {
       if (!alias) {
         throw new Error('Alias not provided');
       }
-
-      const userData = await firstValueFrom(this.authService.getUserData());
-      const userId = userData.id;
-      
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
-      
+    
       const url = await firstValueFrom(
         this.urlService.getUrlByAlias(alias)
       );
