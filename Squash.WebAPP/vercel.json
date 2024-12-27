@@ -1,18 +1,15 @@
 {
+    "version": 2,
     "builds": [
       {
-        "src": "package.json",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "dist/**",
+        "src": "dist/squash.web-app/**/*",
         "use": "@vercel/static"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/dist/squash.web-app/$1"
+        "dest": "/index.html"
       }
     ]
   }
