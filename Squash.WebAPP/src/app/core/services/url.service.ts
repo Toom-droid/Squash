@@ -34,7 +34,7 @@ export class UrlService {
 
   // Obtener una URL por alias
   getUrlByAlias(alias: string): Observable<Url> {
-    return this.http.get<Url>(`${this.urlApi}/${alias}`);
+    return this.http.get<Url>(`${this.urlApi}/alias/${alias}`);
   }
 
   // Validar existencia de alias por ID
@@ -49,7 +49,7 @@ export class UrlService {
 
   // Actualizar contador de visitas
   updateUrlVisitCount(urlId: number, visitCount: number): Observable<boolean> {
-    return this.http.put<boolean>(`${this.urlApi}/${urlId}/${visitCount}`, {});
+    return this.http.put<boolean>(`${this.urlApi}/visit/${urlId}/${visitCount}`, {});
   }
 
   // Crear una nueva URL

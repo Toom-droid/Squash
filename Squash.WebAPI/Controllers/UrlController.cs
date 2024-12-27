@@ -32,7 +32,7 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-        [HttpGet("/{alias}")]
+        [HttpGet("/alias/{alias}")]
         public async Task<ActionResult<UrlReadDTO>> GetUrlByAliasAync(string alias) {
             try 
             {
