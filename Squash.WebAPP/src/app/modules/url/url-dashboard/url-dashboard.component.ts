@@ -222,9 +222,9 @@ export class UrlDashboardComponent implements OnInit, OnDestroy {
 
   copyToClipboard(alias: string): void {
     navigator.clipboard
-      .writeText(`https://localhost:4200/${alias}`)
-      .then(() => this.toastr.success(`/${alias}`, 'Copiado al portapapeles'))
-      .catch((err) => console.error('Error al copiar al portapapeles:', err));
+      .writeText(`https://squash-xi.vercel.app/${alias}`)
+      .then(() => this.toastr.success(`/${alias}`, 'Copied to clipoard'))
+      .catch((err) => console.error('Error coping to clipboard:', err));
   }
 
   ngOnDestroy(): void {
