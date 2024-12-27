@@ -98,7 +98,7 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-        [HttpPut("/{urlId}/{visitCount}")]
+        [HttpPut("/visit/{urlId}/{visitCount}")]
         public async Task<IActionResult> UpdateUrlVisitCountAsync(int urlId, int visitCount)
         {
             try
