@@ -37,7 +37,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontendOrigin", policy =>
     {
-        policy.WithOrigins("https://localhost:4200")
+        policy.WithOrigins("https://squash-xi.vercel.app")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
