@@ -16,3 +16,46 @@
   background-color: var(--black);
 }
 
+.submenu {
+  position: fixed;
+  top: 60px; 
+  right: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  padding: .4rem;
+  background-color: var(--dark-grey);
+}
+
+
+.submenu.show {
+  opacity: 1;
+  transform: translateY(0); 
+}
+
+.submenu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submenu li {
+  margin: 10px 0;
+}
+
+.submenu p {
+  font-size: 1.2rem;
+}
+
+.submenu li a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.submenu li a:hover {
+  color: #007bff;
+}
+
+

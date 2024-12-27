@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importamos NgbModal
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Url } from '../../../models/url.model';
@@ -73,7 +73,7 @@ export class UrlDashboardComponent implements OnInit, OnDestroy {
               this.loading = false;
             },
             (error) => {
-              console.error('Error al cargar las URLs:', error);
+              console.error('Error loading URLs:', error);
               this.loading = false;
             }
           );
