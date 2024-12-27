@@ -16,6 +16,16 @@
   background-color: var(--black);
 }
 
+.title{
+  font-size: 1.5rem;
+}
+
+@media (max-width: 576px) {
+  .title{
+    font-size: 1rem;
+  }
+}
+
 .submenu {
   position: fixed;
   top: 60px; 
