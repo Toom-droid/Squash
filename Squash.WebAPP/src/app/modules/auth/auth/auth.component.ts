@@ -36,7 +36,6 @@ export class AuthComponent implements OnInit {
     this.authService.getUserData().subscribe({
       next: (data) => {
         this.userData = data;
-        console.log('Datos del usuario:', this.userData);
       },
       error: (err) => {
         console.error('Error al obtener los datos del usuario:', err);
