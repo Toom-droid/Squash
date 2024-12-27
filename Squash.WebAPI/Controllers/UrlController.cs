@@ -32,7 +32,7 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{alias}")]
+        [HttpGet("/{alias}")]
         public async Task<ActionResult<UrlReadDTO>> GetUrlByAliasAync(string alias) {
             try 
             {
@@ -98,7 +98,7 @@ namespace Squash.WebAPI.Controllers
             }
         }
 
-        [HttpPut("{urlId}/{visitCount}")]
+        [HttpPut("/{urlId}/{visitCount}")]
         public async Task<IActionResult> UpdateUrlVisitCountAsync(int urlId, int visitCount)
         {
             try
