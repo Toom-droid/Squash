@@ -77,13 +77,8 @@
               "buildTarget": "Squash.WebAPP:build:development"
             }
           },
-          "defaultConfiguration": "development",
-          "options": {
-            "port": 4200,
-            "ssl": true,
-            "sslKey": "C:\\Tomas\\Repos\\Squash\\Squash.WebAPP\\ssl\\localhost-key.pem",
-            "sslCert": "C:\\Tomas\\Repos\\Squash\\Squash.WebAPP\\ssl\\localhost.pem"
-          }
+          "defaultConfiguration": "development"
+          
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
