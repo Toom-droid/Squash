@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class UrlService extends BaseService<Url> {
   private urlApi = "https://squash-7b6x.onrender.com/api/Url"
+  private cachedUrls: Url[] = [];
 
   getUrlsByUserIdAsync(id: number): Observable<Url[]> {
     return this.http.get<Url[]>(`${this.urlApi}/userId/${id}`);

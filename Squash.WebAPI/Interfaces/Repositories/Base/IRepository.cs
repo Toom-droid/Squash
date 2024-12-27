@@ -7,12 +7,6 @@
     public interface IRepository<T> where T : class
     {
         /// <summary>
-        /// Get all entities.
-        /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<T>> GetAllAsync();
-
-        /// <summary>
         /// Get entity by id.
         /// </summary>
         /// <param name="id">Id</param>

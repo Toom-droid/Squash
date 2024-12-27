@@ -29,6 +29,8 @@ export class UrlDeleteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.urlIdToDelete)
+    
     const modalElement = document.getElementById('confirmDeleteModal');
     if (modalElement) {
       modalElement.addEventListener('hidden.bs.modal', () => {
