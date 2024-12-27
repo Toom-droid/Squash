@@ -114,7 +114,7 @@
               />
             </div>
           </div>
-          <div style="position: relative;">
+          <div style="position: relative;" *ngIf="isLoggedIn">
             <a
               class="nav-link active fw-semibold fs-4"
               (click)="toggleSubmenu()"
@@ -122,20 +122,20 @@
             >
               <img src="/icons/avatar-icon.svg" class="icon" alt="link icon" />
             </a>
+            <div
+              class="submenu"
+              [class.show]="submenuVisible"
+              style="position: absolute;"
+            >
+              <ul>
+                <li><p class="text-white">{{user.name}}</p></li>
+                <li><a routerLink="/auth" (click)="toggleSubmenu()" class="d-flex align-items-center gap-2">
+                  <img src="/icons/logout-icon.svg" class="icon">
+                  Log out</a></li>
+              </ul>
+            </div>
           </div>
           
-          <div
-            class="submenu"
-            [class.show]="submenuVisible"
-            style="position: absolute;"
-          >
-            <ul>
-              <li><p class="text-white">{{user.name}}</p></li>
-              <li><a routerLink="/auth" (click)="toggleSubmenu()" class="d-flex align-items-center gap-2">
-                <img src="/icons/logout-icon.svg" class="icon">
-                Log out</a></li>
-            </ul>
-          </div>
           
           
         </li>
