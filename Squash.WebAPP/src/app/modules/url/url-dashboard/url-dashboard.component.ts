@@ -222,7 +222,7 @@ export class UrlDashboardComponent implements OnInit, OnDestroy {
 
   copyToClipboard(alias: string): void {
     navigator.clipboard
-      .writeText(`https://squash-xi.vercel.app/${alias}`)
+      .writeText(`https://ssquash.vercel.app/${alias}`)
       .then(() => this.toastr.success(`/${alias}`, 'Copied to clipoard'))
       .catch((err) => console.error('Error coping to clipboard:', err));
   }
