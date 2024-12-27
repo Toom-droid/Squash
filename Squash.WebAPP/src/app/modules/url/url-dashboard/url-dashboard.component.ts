@@ -200,8 +200,6 @@ export class UrlDashboardComponent implements OnInit, OnDestroy {
           userId: userId,
         };
 
-        console.log(createdUrl);
-
         this.urlService.createUrl(createdUrl).subscribe({
           next: () => {
             this.toastr.success('URL created succesfully');
